@@ -9,11 +9,17 @@ services:
       - mysql_db
     links:
       - mysql_db:app_db
+    environment:
+      DATABASE_URL: jdbc:mysql://mysql_db:3307/diplomDB
+      MYSQL_DATABASE: diplomDB
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+      MYSQL_ROOT_PASSWORD: dev
   mysql_db:
     image: "mysql:8.0"
     restart: always
     ports:
-      - 3306:3306
+      - 3307:3307
     environment:
       MYSQL_DATABASE: diplomDB
       MYSQL_USER: dev
