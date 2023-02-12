@@ -1,27 +1,24 @@
 package com.example.diplom.controller;
 
-import com.example.diplom.entity.File;
 import com.example.diplom.exception.NotFoundException;
-import com.example.diplom.service.FileService;
 import com.example.diplom.service.UserService;
 import com.example.diplom.text.Message;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
-public class BaseController {
+public class UserController {
     private final UserService userService;
-    private final FileService fileService;
 
-    public BaseController(UserService userService, FileService fileService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.fileService = fileService;
     }
 
     @PostMapping("/login")
