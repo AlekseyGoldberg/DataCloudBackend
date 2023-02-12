@@ -1,2 +1,14 @@
 server:
   port: 8081
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
