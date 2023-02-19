@@ -54,6 +54,7 @@ public class UserController {
             userService.deactivateToken(request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(Message.INTERNAL_SERVICE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

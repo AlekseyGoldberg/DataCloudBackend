@@ -26,11 +26,17 @@ public class HeaderAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/create")) {
+        if (request.getRequestURI().equals("/login")
+                || request.getRequestURI().equals("/create")
+                || request.getRequestURI().equals("/logout")) {
             filterChain.doFilter(request, response);
             return;
         }
         if (request.getMethod().equals("OPTIONS")) {
+            User user = new User("user", "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+            final UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
             return;
         }
@@ -44,11 +50,6 @@ public class HeaderAuthenticationFilter extends OncePerRequestFilter {
             return;
 
         com.example.diplom.entity.User userFromDb = service.getUserById(id);
-//        if (request.getRequestURI().equals("/logout")) {
-//            userFromDb.setJwt("");
-//            service.saveUser(userFromDb);
-//            return;
-//        }
 
         User user = new User(userFromDb.getLogin(), "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
         final UsernamePasswordAuthenticationToken authentication =

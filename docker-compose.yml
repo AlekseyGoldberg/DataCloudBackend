@@ -10,7 +10,7 @@ services:
     links:
       - mysql_db:app_db
     environment:
-      DATABASE_URL: jdbc:mysql://mysql_db:3307/diplomDB
+      DATABASE_URL: jdbc:mysql://mysql_db:3306/diplomDB
       MYSQL_DATABASE: diplomDB
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
@@ -19,9 +19,11 @@ services:
     image: "mysql:8.0"
     restart: always
     ports:
-      - 3307:3307
+      - 3306:3306
     environment:
       MYSQL_DATABASE: diplomDB
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
       MYSQL_ROOT_PASSWORD: dev
+    volumes:
+      - ./user.sql:/docker-entrypoint-initdb.d/user.sql

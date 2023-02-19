@@ -22,7 +22,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .x509()
                 .and()
-                .authorizeRequests().anyRequest().permitAll()
+                .authorizeRequests().antMatchers("/create").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/login").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/logout").permitAll()
+                .and()
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .addFilterBefore(headerAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
