@@ -25,7 +25,7 @@ import static java.time.Instant.now;
 @Service
 public class UserService {
     private final String secret = "U2VjcmV0X2tleV9mb3JfZ2VuZXJhdGVfSldUX3Rva2Vu";
-    Key hmac = new SecretKeySpec(Base64.getDecoder().decode(secret), SignatureAlgorithm.HS256.getJcaName());
+    private final Key hmac = new SecretKeySpec(Base64.getDecoder().decode(secret), SignatureAlgorithm.HS256.getJcaName());
     private final UserRepository repository;
 
     public UserService(UserRepository repository) {
@@ -44,10 +44,6 @@ public class UserService {
         } else {
             throw new NotFoundException("Неверно введенные данные");
         }
-    }
-
-    public void saveUser(User user) {
-        repository.saveUser(user);
     }
 
     public User getUserById(Long id) {
@@ -113,6 +109,5 @@ public class UserService {
         User user = repository.getUserById(getIdFromJWT(request.getHeader("auth-token")));
         user.setJwt("");
         repository.saveUser(user);
-
     }
 }

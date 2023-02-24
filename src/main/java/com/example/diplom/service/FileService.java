@@ -2,8 +2,10 @@ package com.example.diplom.service;
 
 import com.example.diplom.entity.File;
 import com.example.diplom.entity.User;
+import com.example.diplom.exception.FileExist;
 import com.example.diplom.repository.FileRepository;
 import com.example.diplom.repository.UserRepository;
+import com.example.diplom.text.Message;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,8 +29,12 @@ public class FileService {
         Long id = fileRepository.count() + 1;
         File file = new File(id, filename, multipartFile.getBytes(), multipartFile.getSize(), new Date());
         User user = userRepository.getUserByLogin(principal.getName());
-        user.getFile().add(file);
-        userRepository.saveUser(user);
+        if (user.getFile().contains(file)) {
+            throw new FileExist(Message.FILE_THIS_NAME_EXIST);
+        } else {
+            user.getFile().add(file);
+            userRepository.saveUser(user);
+        }
     }
 
     public File getFile(String filename, Principal principal) {

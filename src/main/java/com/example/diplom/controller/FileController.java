@@ -1,10 +1,10 @@
 package com.example.diplom.controller;
 
 import com.example.diplom.entity.File;
+import com.example.diplom.exception.FileExist;
 import com.example.diplom.service.FileService;
 import com.example.diplom.text.Message;
 import org.json.JSONObject;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +27,9 @@ public class FileController {
         try {
             fileService.saveFile(filename, file, user);
             return new ResponseEntity<>(null, HttpStatus.OK);
-        } catch (DataIntegrityViolationException e) {
-            System.out.println(e);
-            return new ResponseEntity<>(Message.FILE_THIS_NAME_EXIST, HttpStatus.EXPECTATION_FAILED);
+        } catch (FileExist e) {
+            System.out.println(e.fillInStackTrace());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
         } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>(Message.INTERNAL_SERVICE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -37,7 +37,7 @@ public class FileController {
     }
 
     @DeleteMapping("/file")
-    public ResponseEntity<String> deleteFile(@RequestParam String filename, Principal principal, RequestEntity<String> request) {
+    public ResponseEntity<String> deleteFile(@RequestParam String filename, Principal principal) {
         try {
             fileService.deleteFile(filename, principal);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -70,12 +70,13 @@ public class FileController {
     }
 
     @GetMapping("/list")
-    public Set<File> getFileList(Principal principal) {
+    public ResponseEntity<Set<File>> getFileList(Principal principal) {
         try {
-            return fileService.getFileList(principal);
+            Set<File> files = fileService.getFileList(principal);
+            return new ResponseEntity<>(files, HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);
-            return null;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
