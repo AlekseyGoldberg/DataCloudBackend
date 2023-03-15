@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class UserController {
@@ -47,16 +46,4 @@ public class UserController {
         String hashPassword = userService.hashPassword(body.getString("password"));
         return userService.createUser(login, hashPassword).toString();
     }
-
-    @PostMapping("/logout")
-    public ResponseEntity<String> deactivateToken(HttpServletRequest request) {
-        try {
-            userService.deactivateToken(request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ResponseEntity<>(Message.INTERNAL_SERVICE_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
 }
