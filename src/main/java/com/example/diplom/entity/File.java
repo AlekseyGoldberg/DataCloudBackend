@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
@@ -18,12 +15,13 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "t_file")
 public class File {
     @Id
     private Long id;
     @Column
     private String filename;
-    @Lob
+    //    @Lob
     @Column
     private byte[] file;
 
@@ -33,16 +31,8 @@ public class File {
     @Column
     private Date timeCreate;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", filename='" + filename + '\'' +
-                ", file=" + Arrays.toString(file) +
-                ", size=" + size +
-                ", timeCreate=" + timeCreate +
-                '}';
-    }
+    @ManyToOne
+    private User user;
 
     @Override
     public boolean equals(Object o) {

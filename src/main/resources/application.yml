@@ -7,7 +7,14 @@ spring:
     password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
+    defer-datasource-initialization: false
+#  sql:
+#    init:
+#      mode: embedded
+  liquibase:
+    enabled: true
+    change-log: changelog.xml
   servlet:
     multipart:
       max-file-size: 100MB

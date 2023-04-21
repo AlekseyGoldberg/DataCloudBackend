@@ -32,7 +32,7 @@ public class AppConfigTest {
     {
         user.setJwt(jwt);
         Set<File> files = new HashSet<>();
-        files.add(new File(1L, "file1", null, 55L, new Date()));
+        files.add(new File(1L, "file1", null, 55L, new Date(), user));
         user.setFile(files);
     }
 
@@ -44,7 +44,7 @@ public class AppConfigTest {
 
     private RequestEntity<String> requestUser = new RequestEntity<>(this.getBodyForRequest(), this.getMethod(), this.getRequestUri());
 
-    private RequestEntity<String> requestForEditFile= new RequestEntity<>("{\"filename\":\"editFilename\"}",HttpMethod.POST,new URI("/edit"));
+    private RequestEntity<String> requestForEditFile = new RequestEntity<>("{\"filename\":\"editFilename\"}", HttpMethod.POST, new URI("/edit"));
 
 
 }

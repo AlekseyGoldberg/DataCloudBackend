@@ -12,6 +12,7 @@ import java.util.Set;
 @Getter
 @NoArgsConstructor
 @Entity
+@Table(name = "t_user")
 public class User {
     public User(String login, String hashPassword) {
         this.login = login;
@@ -21,8 +22,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<File> file;
 
     @Column

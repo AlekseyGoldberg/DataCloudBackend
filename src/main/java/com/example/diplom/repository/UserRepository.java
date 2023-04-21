@@ -3,6 +3,8 @@ package com.example.diplom.repository;
 import com.example.diplom.entity.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class UserRepository {
     private final UserJPA userJPA;
@@ -26,5 +28,9 @@ public class UserRepository {
 
     public void saveUser(User user) {
         userJPA.save(user);
+    }
+
+    public List<User> findAll() {
+        return userJPA.findAll();
     }
 }

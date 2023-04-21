@@ -8,4 +8,6 @@ import javax.transaction.Transactional;
 public interface FileJPA extends JpaRepository<File, Long> {
     @Transactional
     void deleteByFilename(String filename);
+
+    File findFileByFilename(String filename);
 }

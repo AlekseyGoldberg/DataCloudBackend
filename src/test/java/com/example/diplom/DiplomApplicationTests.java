@@ -2,6 +2,7 @@ package com.example.diplom;
 
 import com.example.diplom.controller.FileController;
 import com.example.diplom.controller.UserController;
+import com.example.diplom.dto.response.FileResponseDto;
 import com.example.diplom.entity.File;
 import com.example.diplom.exception.FileExist;
 import com.example.diplom.repository.FileRepository;
@@ -10,6 +11,7 @@ import com.example.diplom.text.Message;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -81,12 +83,6 @@ class DiplomApplicationTests {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualResponse.getStatusCode());
     }
 
-//    @Test
-//    public void deactivateToken(){
-//        RequestEntity<String> request=configTest.getRequest();
-//        ResponseEntity<String> actualResponse=userController.deactivateToken(request);
-//    }
-
     @Test
     public void uploadFileSuccessTest() {
         MultipartFile file = mock(MultipartFile.class);
@@ -118,19 +114,9 @@ class DiplomApplicationTests {
 
     @Test
     public void deleteFileSuccessesTest() {
-        Principal principal = mock(Principal.class);
-        ResponseEntity<String> actualResponse = fileController.deleteFile("file1", principal);
+        ResponseEntity<String> actualResponse = fileController.deleteFile("file1");
         System.out.println(actualResponse);
         assertEquals(HttpStatus.OK, actualResponse.getStatusCode());
-    }
-
-    @Test
-    public void deleteFileException() {
-        when(userRepository.getUserByLogin(any())).thenThrow(new RuntimeException());
-        Principal principal = mock(Principal.class);
-        ResponseEntity<String> actualResponse = fileController.deleteFile("file1", principal);
-        System.out.println(actualResponse);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualResponse.getStatusCode());
     }
 
     @Test
@@ -152,8 +138,9 @@ class DiplomApplicationTests {
 
     @Test
     public void editFileSuccessesTest() {
-        Principal principal = mock(Principal.class);
-        ResponseEntity<String> actualRequest = fileController.editFile("file1", configTest.getRequestForEditFile(), principal);
+        File file = Mockito.mock(File.class);
+        when(fileRepository.getFile(any())).thenReturn(file);
+        ResponseEntity<String> actualRequest = fileController.editFile("file1", configTest.getRequestForEditFile());
         System.out.println(actualRequest);
         assertEquals(HttpStatus.OK, actualRequest.getStatusCode());
     }
@@ -161,8 +148,7 @@ class DiplomApplicationTests {
     @Test
     public void editFileExceptionTest() {
         when(userRepository.getUserByLogin(any())).thenThrow(new RuntimeException());
-        Principal principal = mock(Principal.class);
-        ResponseEntity<String> actualRequest = fileController.editFile("file1", configTest.getRequestForEditFile(), principal);
+        ResponseEntity<String> actualRequest = fileController.editFile("file1", configTest.getRequestForEditFile());
         System.out.println(actualRequest);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualRequest.getStatusCode());
     }
@@ -170,7 +156,7 @@ class DiplomApplicationTests {
     @Test
     public void getFileList() {
         Principal principal = mock(Principal.class);
-        ResponseEntity<Set<File>> actualResponse = fileController.getFileList(principal);
+        ResponseEntity<List<FileResponseDto>> actualResponse = fileController.getFileList(principal);
         System.out.println(actualResponse);
         assertEquals(1, actualResponse.getBody().size());
     }
@@ -179,7 +165,7 @@ class DiplomApplicationTests {
     public void getFileException() {
         when(userRepository.getUserByLogin(any())).thenThrow(new RuntimeException());
         Principal principal = mock(Principal.class);
-        ResponseEntity<Set<File>> actualResponse = fileController.getFileList(principal);
+        ResponseEntity<List<FileResponseDto>> actualResponse = fileController.getFileList(principal);
         System.out.println(actualResponse);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, actualResponse.getStatusCode());
     }

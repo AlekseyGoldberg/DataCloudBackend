@@ -27,13 +27,12 @@ public class FileService {
 
     public void saveFile(String filename, MultipartFile multipartFile, Principal principal) throws IOException {
         Long id = fileRepository.count() + 1;
-        File file = new File(id, filename, multipartFile.getBytes(), multipartFile.getSize(), new Date());
         User user = userRepository.getUserByLogin(principal.getName());
+        File file = new File(id, filename, multipartFile.getBytes(), multipartFile.getSize(), new Date(), user);
         if (user.getFile().contains(file)) {
             throw new FileExist(Message.FILE_THIS_NAME_EXIST);
         } else {
-            user.getFile().add(file);
-            userRepository.saveUser(user);
+            fileRepository.saveFile(file);
         }
     }
 
@@ -53,21 +52,13 @@ public class FileService {
         return user.getFile();
     }
 
-    public void editNameFile(String filename, String newFilename, Principal principal) {
-        User user = userRepository.getUserByLogin(principal.getName());
-        Set<File> fileList = user.getFile();
-        for (File file : fileList) {
-            if (file.getFilename().equals(filename)) {
-                file.setFilename(newFilename);
-            }
-        }
-        userRepository.saveUser(user);
+    public void editNameFile(String filename, String newFilename) {
+        File file = fileRepository.getFile(filename);
+        file.setFilename(newFilename);
+        fileRepository.saveFile(file);
     }
 
-    public void deleteFile(String filename, Principal principal) {
-        User user = userRepository.getUserByLogin(principal.getName());
-        Set<File> fileList = user.getFile();
-        fileList.removeIf(file -> file.getFilename().equals(filename));
-        userRepository.saveUser(user);
+    public void deleteFile(String filename) {
+        fileRepository.removeFile(filename);
     }
 }

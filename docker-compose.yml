@@ -25,5 +25,3 @@ services:
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
       MYSQL_ROOT_PASSWORD: dev
-    volumes:
-      - ./user.sql:/docker-entrypoint-initdb.d/user.sql
